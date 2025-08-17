@@ -321,7 +321,7 @@ ln -sf /usr/share/zoneinfo/Asia/Shanghai /etc/localtime
 #### 硬件时间设置，将当前的正确 UTC 时间写入硬件时间
 
 ```bash
-hwclock --systohc
+hwclock --systohc # 将系统时钟设置到硬件时钟
 ```
 
 #### 设置 Locale 进行本地化
@@ -582,26 +582,11 @@ nameserver 8.8.4.4
 nameserver 2001:4860:4860::8844
 ```
 
-\section{配置环境变量}
-vim .bashrc （环境变量配置文件）
-[ 
-	
-
-
-
-
-
-
-
-：
-
-]
-
-
-
 ### 显卡驱动
 
-#### AMD 核芯显卡
+#### AMD 集显
+
+[AMDGPU](https://wiki.archlinuxcn.org/wiki/AMDGPU)
 
 ```bash
 sudo pacman -S mesa lib32-mesa xf86-video-amdgpu vulkan-radeon lib32-vulkan-radeon
@@ -631,27 +616,58 @@ GLFW_IM_MODULE=ibus
 
 
 
-## 安装字体
+### 安装字体
+
+### Xorg
 
 
----
+#### 安装
+
+```bash
+sudo pacman -S xorg-server xorg-xinit xorg-xrandr xorg-xsetroot
+```
+
+
 
 
 ### 功耗控制
 
 
+### 环境变量
 
+[环境变量](https://wiki.archlinuxcn.org/wiki/%E7%8E%AF%E5%A2%83%E5%8F%98%E9%87%8F)
 
+### systemd
 
+[systemd](https://wiki.archlinuxcn.org/wiki/Systemd#systemctl_%E5%9F%BA%E6%9C%AC%E7%94%A8%E6%B3%95)
 
+### Arch 的启动流程
 
+[Arch 的启动流程](https://wiki.archlinuxcn.org/wiki/Arch_%E7%9A%84%E5%90%AF%E5%8A%A8%E6%B5%81%E7%A8%8B#%E5%BC%95%E5%AF%BC%E5%8A%A0%E8%BD%BD%E7%A8%8B%E5%BA%8F)
 
+### 核心工具
 
+[核心工具](https://wiki.archlinuxcn.org/wiki/%E6%A0%B8%E5%BF%83%E5%B7%A5%E5%85%B7)
 
+### 系统时间
 
+[系统时间](https://wiki.archlinuxcn.org/wiki/%E7%B3%BB%E7%BB%9F%E6%97%B6%E9%97%B4#%E6%97%B6%E9%97%B4%E6%A0%87%E5%87%86)
 
+### 系统维护
 
+[系统维护](https://wiki.archlinuxcn.org/wiki/%E7%B3%BB%E7%BB%9F%E7%BB%B4%E6%8A%A4)
 
+### 用户和用户组
+
+[用户和用户组](https://wiki.archlinuxcn.org/wiki/%E7%94%A8%E6%88%B7%E5%92%8C%E7%94%A8%E6%88%B7%E7%BB%84)
+
+### 安全
+
+[安全](https://wiki.archlinuxcn.org/wiki/%E5%AE%89%E5%85%A8)
+
+### [分类:包管理](https://wiki.archlinuxcn.org/wiki/Category:%E5%8C%85%E7%AE%A1%E7%90%86)
+
+[分类:包管理](https://wiki.archlinuxcn.org/wiki/Category:%E5%8C%85%E7%AE%A1%E7%90%86)
 
 
 
