@@ -557,7 +557,7 @@ sudo grub-mkconfig -o /boot/grub/grub.cfg
 sudo vim /etc/mkinitcpio.conf
 ```
 
-在 HOOKS 行添加 `resume` 值。注意，`resume` 需要加入在 `udev` 后。若使用了 LVM 分区，`resume` 需要加入在 `lvm2` 后。
+在 HOOKS 行添加 `resume` 值。注意，`resume` 需要加入在 `filesystem` 后。若使用了 LVM 分区，`resume` 需要加入在 `lvm2` 后。
 
 最后通过以下命令重新生成 `initramfs` 镜像：
 
