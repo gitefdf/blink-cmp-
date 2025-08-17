@@ -616,7 +616,56 @@ GLFW_IM_MODULE=ibus
 
 
 
-### 安装字体
+### [字体](https://wiki.archlinuxcn.org/wiki/%E5%AD%97%E4%BD%93)
+#### 安装
+
+##### pacman
+
+- adobe-source-code-pro-fonts # 等宽
+- adobe-source-han-sans-cn-fonts # 思源黑体
+- adobe-source-han-serif-cn-fonts # 思源宋体
+- adobe-source-sans-fonts
+- adobe-source-serif-fonts
+- noto-fonts-emoji
+- ttf-nerd-fonts-symbols
+- ttf-nerd-fonts-symbols-common
+- ttf-nerd-fonts-symbols-mono
+- xorg-fonts-encodings
+
+##### 手动安装
+
+为单个用户安装，则安装到：`~/.local/share/fonts/`
+
+要为系统（所有用户）安装，则安装到：`/usr/local/share/fonts/`
+
+是否要创建子目录由用户决定，各发行版也有不同。为清晰起见，可将每个字体族放在单独的目录里。Fontconfig 将递归搜索默认路径，确保可以发现子目录下的文件。
+
+以下是一个目录结构示例：
+
+```
+/usr/local/share/fonts/
+ ├── otf
+ │   └── SourceCodeVariable
+ │       ├── SourceCodeVariable-Italic.otf
+ │       └── SourceCodeVariable-Roman.otf
+ └── ttf
+     ├── AnonymousPro
+     │   ├── Anonymous-Pro-B.ttf
+     │   ├── Anonymous-Pro-I.ttf
+     │   └── Anonymous-Pro.ttf
+     └── CascadiaCode
+         ├── CascadiaCode-Bold.ttf
+         ├── CascadiaCode-Light.ttf
+         └── CascadiaCode-Regular.ttf
+```
+
+请确保所有用户都有读取字体文件的权限，即至少将文件 chmod 为 444，目录为 555。
+
+最后，更新 Fontconfig 的缓存（通常不需要，因为使用 Fontconfig 库的软件会这样做）：
+
+```bash
+fc-cache
+```
 
 ### Xorg
 
@@ -667,7 +716,7 @@ sudo pacman -S xorg-server xorg-xinit xorg-xrandr xorg-xsetroot
 
 ### [分类:包管理](https://wiki.archlinuxcn.org/wiki/Category:%E5%8C%85%E7%AE%A1%E7%90%86)
 
-[分类:包管理](https://wiki.archlinuxcn.org/wiki/Category:%E5%8C%85%E7%AE%A1%E7%90%86)
+(https://wiki.archlinuxcn.org/wiki/Category:%E5%8C%85%E7%AE%A1%E7%90%86)
 
 
 
