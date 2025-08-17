@@ -592,9 +592,26 @@ nameserver 2001:4860:4860::8844
 sudo pacman -S mesa lib32-mesa xf86-video-amdgpu vulkan-radeon lib32-vulkan-radeon
 ```
 
-### 输入法
+### Xorg
 
-[Arch Wiki](https://wiki.archlinuxcn.org/wiki/Fcitx5?rdfrom=https%3A%2F%2Fwiki.archlinux.org%2Findex.php%3Ftitle%3DFcitx5_%28%25E7%25AE%2580%25E4%25BD%2593%25E4%25B8%25AD%25E6%2596%2587%29%26redirect%3Dno)
+
+#### 安装
+
+```bash
+sudo pacman -S xorg-server xorg-xinit xorg-xrandr xorg-xsetroot
+```
+
+### i3
+
+####
+
+```
+sudo pacman -S i3-wm
+```
+
+
+### [输入法](https://wiki.archlinuxcn.org/wiki/Fcitx5?rdfrom=https%3A%2F%2Fwiki.archlinux.org%2Findex.php%3Ftitle%3DFcitx5_%28%25E7%25AE%2580%25E4%25BD%2593%25E4%25B8%25AD%25E6%2596%2587%29%26redirect%3Dno)
+
 
 ```bash
 sudo pacman -S fcitx5-im # （包含：fcitx5 fcitx5-configtool fcitx5-gtk fcitx5-qt）
@@ -624,8 +641,8 @@ GLFW_IM_MODULE=ibus
 - adobe-source-code-pro-fonts # 等宽
 - adobe-source-han-sans-cn-fonts # 思源黑体
 - adobe-source-han-serif-cn-fonts # 思源宋体
-- adobe-source-sans-fonts
-- adobe-source-serif-fonts
+- adobe-source-sans-fonts # 无衬线
+- adobe-source-serif-fonts # 衬线
 - noto-fonts-emoji
 - ttf-nerd-fonts-symbols
 - ttf-nerd-fonts-symbols-common
@@ -666,16 +683,6 @@ GLFW_IM_MODULE=ibus
 ```bash
 fc-cache
 ```
-
-### Xorg
-
-
-#### 安装
-
-```bash
-sudo pacman -S xorg-server xorg-xinit xorg-xrandr xorg-xsetroot
-```
-
 
 
 
