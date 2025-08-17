@@ -607,16 +607,29 @@ vim .bashrc （环境变量配置文件）
 sudo pacman -S mesa lib32-mesa xf86-video-amdgpu vulkan-radeon lib32-vulkan-radeon
 ```
 
-### 安装输入法
+### 输入法
+
+[Arch Wiki](https://wiki.archlinuxcn.org/wiki/Fcitx5?rdfrom=https%3A%2F%2Fwiki.archlinux.org%2Findex.php%3Ftitle%3DFcitx5_%28%25E7%25AE%2580%25E4%25BD%2593%25E4%25B8%25AD%25E6%2596%2587%29%26redirect%3Dno)
 
 ```bash
-sudo pacman -S fcitx5-im #基础包组
-sudo pacman -S fcitx5-chinese-addons #官方中文输入引擎
-sudo pacman -S fcitx5-anthy #日文输入引擎
-yay -S fcitx5-pinyin-moegirl #萌娘百科词库 由于中国大陆政府对github封锁，你可能在此卡住。如卡住，可根据后文设置好代理后再安装
-sudo pacman -S fcitx5-pinyin-zhwiki #中文维基百科词库
-sudo pacman -S fcitx5-material-color #主题
+sudo pacman -S fcitx5-im # （包含：fcitx5 fcitx5-configtool fcitx5-gtk fcitx5-qt）
+sudo pacman -S fcitx5-rime # 官方中文输入引擎
+sudo pacman -S fcitx5-nord # 主题
+paru pacman -S fcitx5-qt4-git #（AUR 通常不需要）
 ```
+#### X11
+
+为了告诉程序使用 fcitx5 输入法，需要设置相应的环境变量。
+
+```
+GTK_IM_MODULE=fcitx
+QT_IM_MODULE=fcitx
+XMODIFIERS=@im=fcitx
+SDL_IM_MODULE=fcitx
+GLFW_IM_MODULE=ibus
+```
+
+
 
 ## 安装字体
 
