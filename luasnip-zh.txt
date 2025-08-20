@@ -59,7 +59,7 @@ local k = require("luasnip.nodes.key_indexer").new_key
 - `dynamicNode`：基于输入生成的节点。
 
 创建代码片段通常使用 `s(trigger:string, nodes:table)` 形式的函数。
-在 Snippets 一节有更详细解释，大意是它会创建一个代码段，包含节点中指定的各个节点。
+在 [Snippets](#snippets-zh-luasnip-snippets) 一节有更详细解释，大意是它会创建一个代码段，包含节点中指定的各个节点。
 当调用 `ls.expend` 时，如果光标前的文本与 `trigger` 匹配，这个代码段会插入到缓冲区。
 
 ---
@@ -75,7 +75,7 @@ s("trig", {
 })
 ```
 
-这些索引不会像 TextMate-snippets（`"$1 ${2: $3 $4}"`） 中那样贯穿整个 snippet ，而是在每个嵌套的 snippetNode 中会以1重新开始：
+这些索引不会像 TextMate-snippets(`"$1 ${2: $3 $4}"`) 中那样贯穿整个 snippet ，而是在每个嵌套的 snippetNode 中会以1重新开始：
 
 ```lua
 s("trig", {
@@ -106,7 +106,7 @@ ls.add_snippets("all", {
 ```
 
 可以使用 `ls.filetype_extend` 使一个文件类型的代码段到另一个文件类型使用，
-更多信息见 API 一节。
+更多信息见 [API](api-luasnip-api) 一节。
 
 ---
 
@@ -152,11 +152,11 @@ ls.add_snippets("all", {
 - `node_ext_opts` 和 `merge_node_ext_opts`  
 控制节点的 `ext_opts`（一般是高亮）。详情见 [ext_opts](#ext_opts-zh-luasnip-ext_opts)。
 - `key`  
-可以引用节点。对 [Key Indexer](#key-indexer-zh-luasnip-key-indexer) 或在运行时查找节点（见 [Snippets-API]）有用，例如在 `dynamicNode` 里。
+可以引用节点。对 [Key Indexer](#key-indexer-zh-luasnip-key-indexer) 或在运行时查找节点（见 [Snippets-API](#api-zh-luasnip-snippets-api)）有用，例如在 `dynamicNode` 里。
 这个 key 在 snippet 的整个生命周期内不需要是唯一的，但在任意时刻，一个代码段不能有重复 key。
 这意味着，可以从 `dynamicNode` 返回带 key 的节点。
 因为，即使它们被生成多次，只要不在同一时刻，就不会有冲突。
-- `node_callbacks`：为节点定义 events-callbacks（见 [event](events-zh-luasnip-events)）。  
+- `node_callbacks`：为节点定义 events-callbacks（见 [event](#events-zh-luasnip-events)）。  
 接受一个表，将事件（例如 `events.enter`）映射到 callback（本质上和转递给 `s` 的 `callbacks` 一样）。
 只是没有从跳转索引到 callbacks 表的映射。
 
@@ -190,13 +190,14 @@ s({trig="trigger"}, {})
 `s(context, nodes, opts)` -> snippet
 
 - `context`:table or a string  
-传入字符串等价传如：
+传入字符串等价传入：
 
 ```lua
 {
     trig = context
 }
 ````
+
 可用值如下：
 
   - `trig`:string  
@@ -207,20 +208,67 @@ s({trig="trigger"}, {})
   - `desc` 或 `decr`：string  
   代码段描述，\n分割或多行表。
   - `wordTrig`:boolean  
-  如果为 true 只有当光标前的完整单词（`[%w_]+`）匹配触发字符，代码段才会展开。默认为 true。
+  如果为 true 只有当光标前的完整单词 (`[%w_]+`)匹配触发字符，代码段才会展开。默认为 true。
   - `regTrig`:boolean  
-  是否以 lua 模式解释代码段。默认 false。建议设置 `trigEngine` 为 `pattern`，
-  这样更灵活，也更符合其他设置。
+  是否以 lua 模式解释代码段。默认 false。  
+  建议设置 `trigEngine` 为 `pattern`，这样更灵活，也更符合其他设置。
   - `trigEngine`:function|string  
-  决定触发词如何匹配，以及什么情况下它算匹配光标前的文本。
-  此行为可以通过传入一个函数完全自定义，但是预定义的函数（通过传入标识符使用），
+  决定触发词如何解析，以及什么情况下它算匹配光标前的文本。
+  此行为可以通过传入一个函数完全自定义，但是预定义的函数，通过传入标识符使用，
 在大多数情况下完全够用。
 
     - `plain`  
-    默认行为，触发词必须与文本完全匹配。
+    默认行为，触发字符必须与文本完全匹配。
     - `pattern`  
-    触发词以 lua 模式解析，如果 `trig .. "$""` 能匹配到光标所在行到光标为止的文本就可以，
+    触发词以 lua 模式解析，如果 `trig .. "$""` 能匹配到光标所在行到光标为止的文本就可以。  
+    捕获组可以通过 `snippet.captures` 使用。
+    - "ecma": the trigger is interpreted as an ECMAscript-regex, and is a match if trig .. "$" matches the line up to the cursor. Capture-groups will be accessible as snippet.captures.
+This trigEngine requires jsregexp (see LSP-snippets-transformations) to be installed, if it is not, this engine will behave like "plain".
+    - "vim": the trigger is interpreted as a vim-regex, and is a match if trig .. "$" matches the line up to the cursor. As with the other regex/pattern-engines, captures will be available as snippet.captures, but there is one caveat: the matching is done using matchlist, so for now empty-string submatches will be interpreted as unmatched, and the corresponding snippet.capture[i] will be nil (this will most likely change, don't rely on this behavior).
 
+除了这些预定义的引擎之外，也可以创建新的引擎：与其传递一个字符串，不如传递一个函数，该函数需要满足
+`trigEngine(trigger, opts) -> (matcher(line_to_cursor, trigger) -> whole_match, captures)` 的形式。
+（这个函数会接收 `trig` 和 `trigEngineOpts`，例如，可以在这里预编译一个正则表达式，
+然后返回一个新的函数。这个返回的函数负责判断当前光标位置
+（用光标之前的整行文本来表示）是否匹配触发字符（触发字符会再次传入，这样一来，
+那些不需要对触发字符做任何特定处理（比如编译）的引擎就可以直接返回一个固定的匹配器），
+以及确定捕获组（capture groups）。）
+例如，lua-engine 就可以这样实现：
+
+```lua
+local function matcher(line_to_cursor, trigger)
+    -- look for match which ends at the cursor.
+    -- put all results into a list, there might be many capture-groups.
+    local find_res = { line_to_cursor:find(trigger .. "$") }
+
+    if #find_res > 0 then
+        -- if there is a match, determine matching string, and the
+        -- capture-groups.
+        local captures = {}
+        -- find_res[1] is `from`, find_res[2] is `to` (which we already know
+        -- anyway).
+        local from = find_res[1]
+        local match = line_to_cursor:sub(from, #line_to_cursor)
+        -- collect capture-groups.
+        for i = 3, #find_res do
+            captures[i - 2] = find_res[i]
+        end
+        return match, captures
+    else
+        return nil
+    end
+end
+
+local function engine(trigger)
+    -- don't do any special work here, can't precompile lua-pattern.
+    return matcher
+end
+```
+
+预定义的引擎在 [trig_engines.lua](https://github.com/L3MON4D3/LuaSnip/blob/master/lua/luasnip/nodes/util/trig_engines.lua)，阅读它获取示例。
+
+  - `hidden`:boolean  
+  在补全引擎里隐藏。如果设置为 true，当查询代码片段时，该代码片段不显示。
   - `priority`:positive number  
   代码段优先级，默认1000。高优先级代码段会在那些低的之前匹配触发词。
   多个代码段可以在 `add_snippets` 里设置优先级。
@@ -228,10 +276,62 @@ s({trig="trigger"}, {})
   `snippet` 或 `autosnippet`，决定代码段通过 `ls.expand()` 手动触发，
   还是自动触发（不要忘记设置 `ls.config.setup({enable_autosnippets = true})`，如果你使用此功能）。
 如果没有设置此选项，代码段类型则取决于代码段是如何添加
+  - `resolveExpandParams`:`fn(snippet, line_to_cursor, matched_trigger, captures) -> table|nil`
+  - `condition`:`fn(line_to_cursor, matched_trigger, captures) -> bool`
+    - `line_to_cursor`:`string`  
+    光标之前的整行字符串
+    - `matched_trigger`:`string`，完整匹配触发字符（从 line_to_cursor 中获取，但这里已经提供了 :D）
+    captures: 如果触发器是一个模式（pattern），这个列表包含捕获组。同样也可以从 line_to_cursor 计算得到，但我们已经处理好了。
+
+此函数可以阻止通过 `ls.expand()` 手动展开代码片段。  
+返回 true 表示允许展开，返回 false 表示阻止展开。
+
+  - `show_condition`:`f(line_to_cursor) -> bool`
+
+  这个函数通常由补全引擎（completion engines）调用，用来判断该 snippet 是否应该出现在当前的补全候选列表里。  
+  默认是一个返回 true 的函数，也就是默认 snippet 总是可见。  
+  这与 `condition` 不同，因为 `condition` 会在代码段展开时进行评估
+  （因此可以访问匹配到的触发字符和捕获内容），而 `show_condition` 在扫描可用片段候选项时由补全引擎评估。
+  `filetype`:`string`  
+  代码段的文件类型。这会覆盖通过` add_snippet` 添加片段时指定的文件类型
+- `nodes`:单个节点或节点列表。节点组成代码段。
+- `opts`：一个包含以下有效键的表
+  - `callbacks`：包含进入/离开节点时调用的函数。  
+  例如，在进入一个代码段的第二个节点时打印文本，`callbacks` 应设置如下：  
+  ```lua
+  {
+    -- position of the node, not the jump-index!!
+    -- s("trig", {t"first node", t"second node", i(1, "third node")}).
+    [2] = {
+    [events.enter] = function(node, _event_args) print("2!") end
+  }
+  }
+  ```
+
+  为代码段自己的事件注册一个回调函数，可以使用键 `[-1]`。更多事件信息在 [events](#events-zh-luasnip-events)
+  - `child_ext_opts`,`merge_child_ext_opts`：
 
 ---
 
 ### Data *zh-luasnip-snippets-data*
+
+Snippets 在启动时包含一些有趣的表
+
+- `snippet.env`：包含在 LSP-protocol 中使用的变量，例如：`TM_CURRENT_LINE` 或 `TM_FILENAME`。这里也可以添加自定义变量，请查看 [Variables-Environment Namespaces](#environment-namespaces-zh-luasnip-variables-environment-namespaces)
+- `snippet.captures`：如果代码段由模式 (`regTrig`) 触发，并且该模式包含捕获组，那么它们可以在这里被获取。
+- `snippet.trigger`：触发该片段的字符串。同样，仅在该片段是通过 `regTrig` 触发时才有意义，用于获取完整匹配。
+
+这些变量/表主要在 `dynamicNode/functionNode` 中使用。在这里,代码段可以立刻通过父节点 (`parent.snippet`)
+访问，并且该片段会被传入函数。（大多数情况下，`parent == parent.snippet`，
+但是动态节点的父节点不一定最外层的代码段，它也可能是一个 `snippetNode`）。
+
+---
+
+### API *zh-luasnip-snippets-api*
+
+- `invalidate()`：
+- `get_keyed_node(key)`：返回与指定 `key` 关联的当前可见节点。
+
 ---
 
 ## TextNode *zh-luasnip-textnode*
@@ -244,21 +344,23 @@ s("trigger", { t("Wow! Text!") })
 
 此片断将展开为：
 
+```
 Wow! Text!⎵
+```
 
 其中，⎵ 是光标。
 
-定义多行文本可以通过传递一个“行表”而不是字符串。
+定义多行文本可以通过传递一个“多行表”而不是字符串。
 
 ```lua
 s("trigger", {
     t({"line!", "Another line."})
 })
 ```
+
 - `t(text, node_ext_opts)`
   - `text`:`string` or `string[]`
-  - `node_opts`:`table`，见 Node
-
+  - `node_opts`:`table`，见 [Node](#Node-zh-luasnip-node)
 ---
 
 ## InsertNode *zh-luasnip-insertnode*
@@ -281,7 +383,6 @@ InsertNode 的跳转顺序如下：
 1. 展开后 ，光标位于 InstertNode 1
 2. 跳跃后，将位于 InsertNode 2
 3. 再次跳跃后，将位于 InsertNode 0
-
 
 如果在片段中未找到第0个 InsertNode，则会在所有其他节点之后自动插入一个。
 
@@ -365,7 +466,7 @@ s("trig", {
 
 - `fn`:`function(argnode_text, parent,user_args1,...,user_argsn) -> text`
   - `argnode_text`:`string [][]`，  
-  当前被包含进 argnodes 内的文本，例如（{{line1}, {line1, line2}}）。代码段缩进从第一行后移除。
+  当前被包含进 argnodes 内的文本，例如 ({{line1}, {line1, line2}})。代码段缩进从第一行后移除。
   - `parent`：函数节点的直接父节点。  
   它被包含在这里，因为它允许方便访问一些信息，这些信息在函数节点有用（示例见 Snippets-Data）
   许多代码段访问周围的代码段只是当做父节点。但是，如果函数节点被嵌套在 `snippetNode` 里，
@@ -412,7 +513,6 @@ s("trig", {
 
 - `number`:节点跳转索引。  
 
-
 ---
 
 ## ChoiceNode *zh-luasnip-choicenode*
@@ -444,8 +544,6 @@ s("trig", {
 可跳转节点（一般需要跳转索引）不需要索引，当作为选项时。因为它们会继承选择节点的跳转索引。
 - `opts?:LuaSnip.Opts.ChoiceNode?`额外可选参数，可用值：
   - 
-
-
 
 ---
 
