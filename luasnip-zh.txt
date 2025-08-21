@@ -2,6 +2,11 @@
 
 # LuaSnip
 
+`expand`:
+  - `line_begin`：仅在光标位于行首时展开。
+
+`show`:
+
 LuaSnip 是一个完全用 lua 编写的代码片段引擎。
 它具有以下强大功能：根据用户输入插入文本 (`luasnip-function-node`) 或节点 (`luasnip-dynamic-node`),
 解析 LSP 语法和切换节点 (`luasnip-choice-node`) 等。关于键位映射和安装等基本设置，请查看 README 文件。
